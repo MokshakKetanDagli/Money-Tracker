@@ -66,109 +66,21 @@ class UserDetail extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        GestureDetector(
-                          onTap: () => showDialog(
-                            barrierDismissible: true,
-                            context: context,
-                            builder: (dialogContext) => const CreditMoneyDialogWidget(),
-                          ).then((value) {
-                            if (value == null) {
-                              return ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text(
-                                    'Transaction Failed\nTry Again',
-                                    style:
-                                        TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                  ),
-                                  backgroundColor: Colors.blueAccent.shade700,
-                                ),
-                              );
-                            } else if (value['Date'] == '') {
-                              return ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text(
-                                    'Please select a date',
-                                    style:
-                                        TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                  ),
-                                  backgroundColor: Colors.blueAccent.shade700,
-                                ),
-                              );
-                            } else if (value['Amount'] == '') {
-                              return ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: const Text(
-                                    'Please enter the amount',
-                                    style:
-                                        TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                  ),
-                                  backgroundColor: Colors.blueAccent.shade700,
-                                ),
-                              );
-                            } else {
-                              final int accountBalance =
-                                  (userData['Closing Balance'] + int.parse(value['Amount']));
-                              final accountTransactions =
-                                  List<Map<String, dynamic>>.from(userData['Account Transactions']);
-                              accountTransactions.insert(0, {
-                                'Date': value['Date'],
-                                'Amount': value['Amount'],
-                                'Type': 'Credit',
-                              });
-                              users.doc(userName).update({
-                                'Username': userData['Username'],
-                                'Phone Number': userData['Phone Number'],
-                                'Closing Balance': accountBalance,
-                                'Account Transactions': accountTransactions,
-                              }).whenComplete(
-                                () => {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: const Text(
-                                        'Transaction Saved',
-                                        style: TextStyle(
-                                            color: Colors.white, fontWeight: FontWeight.bold),
-                                      ),
-                                      backgroundColor: Colors.blueAccent.shade700,
-                                    ),
-                                  ),
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => UserDetail(
-                                        userName: userName,
-                                      ),
-                                    ),
-                                  ),
-                                },
-                              );
-                            }
-                          }),
-                          child: Chip(
-                            backgroundColor: Colors.blueAccent.shade700,
-                            label: const Text(
-                              'CREDIT MONEY',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () => showDialog(
-                            barrierDismissible: true,
-                            context: context,
-                            builder: (dialogContext) => const DebitMoneyDialogWidget(),
-                          ).then(
-                            (value) {
+                        Flexible(
+                          flex: 1,
+                          child: GestureDetector(
+                            onTap: () => showDialog(
+                              barrierDismissible: true,
+                              context: context,
+                              builder: (dialogContext) => const CreditMoneyDialogWidget(),
+                            ).then((value) {
                               if (value == null) {
                                 return ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: const Text(
-                                      'Transaction Failed\nTry Again Later',
+                                      'Transaction Failed\nTry Again',
                                       style: TextStyle(
                                           color: Colors.white, fontWeight: FontWeight.bold),
                                     ),
@@ -199,13 +111,13 @@ class UserDetail extends StatelessWidget {
                                 );
                               } else {
                                 final int accountBalance =
-                                    (userData['Closing Balance'] - int.parse(value['Amount']));
+                                    (userData['Closing Balance'] + int.parse(value['Amount']));
                                 final accountTransactions = List<Map<String, dynamic>>.from(
                                     userData['Account Transactions']);
                                 accountTransactions.insert(0, {
                                   'Date': value['Date'],
                                   'Amount': value['Amount'],
-                                  'Type': 'Debit',
+                                  'Type': 'Credit',
                                 });
                                 users.doc(userName).update({
                                   'Username': userData['Username'],
@@ -231,30 +143,127 @@ class UserDetail extends StatelessWidget {
                                           userName: userName,
                                         ),
                                       ),
-                                    )
+                                    ),
                                   },
                                 );
                               }
-                            },
-                          ),
-                          child: Chip(
-                            backgroundColor: Colors.blueAccent.shade700,
-                            label: const Text(
-                              'DEBIT MONEY',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                            }),
+                            child: Chip(
+                              backgroundColor: Colors.blueAccent.shade700,
+                              label: const Text(
+                                'CREDIT MONEY',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                        Chip(
-                          backgroundColor: Colors.blueAccent.shade700,
-                          label: Text(
-                            'BALANCE ₹ ${userData['Closing Balance']}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                        Flexible(
+                          flex: 1,
+                          child: GestureDetector(
+                            onTap: () => showDialog(
+                              barrierDismissible: true,
+                              context: context,
+                              builder: (dialogContext) => const DebitMoneyDialogWidget(),
+                            ).then(
+                              (value) {
+                                if (value == null) {
+                                  return ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text(
+                                        'Transaction Failed\nTry Again Later',
+                                        style: TextStyle(
+                                            color: Colors.white, fontWeight: FontWeight.bold),
+                                      ),
+                                      backgroundColor: Colors.blueAccent.shade700,
+                                    ),
+                                  );
+                                } else if (value['Date'] == '') {
+                                  return ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text(
+                                        'Please select a date',
+                                        style: TextStyle(
+                                            color: Colors.white, fontWeight: FontWeight.bold),
+                                      ),
+                                      backgroundColor: Colors.blueAccent.shade700,
+                                    ),
+                                  );
+                                } else if (value['Amount'] == '') {
+                                  return ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: const Text(
+                                        'Please enter the amount',
+                                        style: TextStyle(
+                                            color: Colors.white, fontWeight: FontWeight.bold),
+                                      ),
+                                      backgroundColor: Colors.blueAccent.shade700,
+                                    ),
+                                  );
+                                } else {
+                                  final int accountBalance =
+                                      (userData['Closing Balance'] - int.parse(value['Amount']));
+                                  final accountTransactions = List<Map<String, dynamic>>.from(
+                                      userData['Account Transactions']);
+                                  accountTransactions.insert(0, {
+                                    'Date': value['Date'],
+                                    'Amount': value['Amount'],
+                                    'Type': 'Debit',
+                                  });
+                                  users.doc(userName).update({
+                                    'Username': userData['Username'],
+                                    'Phone Number': userData['Phone Number'],
+                                    'Closing Balance': accountBalance,
+                                    'Account Transactions': accountTransactions,
+                                  }).whenComplete(
+                                    () => {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: const Text(
+                                            'Transaction Saved',
+                                            style: TextStyle(
+                                                color: Colors.white, fontWeight: FontWeight.bold),
+                                          ),
+                                          backgroundColor: Colors.blueAccent.shade700,
+                                        ),
+                                      ),
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => UserDetail(
+                                            userName: userName,
+                                          ),
+                                        ),
+                                      )
+                                    },
+                                  );
+                                }
+                              },
+                            ),
+                            child: Chip(
+                              backgroundColor: Colors.blueAccent.shade700,
+                              label: const Text(
+                                'DEBIT MONEY',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: Chip(
+                            backgroundColor: Colors.blueAccent.shade700,
+                            label: Text(
+                              'BAL ₹ ${userData['Closing Balance']}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),

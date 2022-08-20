@@ -19,7 +19,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
     usernameController = TextEditingController();
     phoneController = TextEditingController();
     amountController = TextEditingController();
-    //
     collectionReference = FirebaseFirestore.instance.collection('New_Daily_Collection_350');
     super.initState();
   }

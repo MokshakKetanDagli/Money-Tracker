@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 
+import 'add_user_screen.dart';
 import 'user_detail.dart';
 
 class ViewUserScreen extends StatelessWidget {
@@ -52,67 +53,131 @@ class ViewUserScreen extends StatelessWidget {
               ),
             );
           } else {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: ListTile(
-                      onTap: () => Navigator.push(
+            if (snapshot.data!.docs.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'NO USERS CREATED',
+                      style: TextStyle(
+                        color: Colors.blueAccent.shade700,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ElevatedButton(
+                      onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => UserDetail(
-                            userName: snapshot.data!.docs[index].get('Username'),
+                          builder: (context) => const AddUserScreen(),
+                        ),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text('Add User'),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.blueAccent.shade700),
+                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
                           ),
                         ),
                       ),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      tileColor: Colors.blueAccent.shade700,
-                      leading: Text(
-                        '${index + 1}',
-                        style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
-                      ),
-                      title: Text(
-                        '${snapshot.data!.docs[index].get('Username')}',
-                        style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '₹ ${snapshot.data!.docs[index].get('Closing Balance')}',
-                            style: const TextStyle(
-                                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: ListTile(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => UserDetail(
+                              userName: snapshot.data!.docs[index].get('Username'),
+                            ),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25)),
-                                  title: Text(
-                                    'Delete User',
-                                    style: TextStyle(
-                                      color: Colors.blueAccent.shade400,
+                        ),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        tileColor: Colors.blueAccent.shade700,
+                        leading: Text(
+                          '${index + 1}',
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
+                        ),
+                        title: Text(
+                          '${snapshot.data!.docs[index].get('Username')}',
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '₹ ${snapshot.data!.docs[index].get('Closing Balance')}',
+                              style: const TextStyle(
+                                  color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25)),
+                                    title: Text(
+                                      'Delete User',
+                                      style: TextStyle(
+                                        color: Colors.blueAccent.shade400,
+                                      ),
                                     ),
-                                  ),
-                                  actions: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        collectionReference
-                                            .doc(snapshot.data!.docs[index].get('Username'))
-                                            .delete()
-                                            .whenComplete(
-                                              () => {
-                                                ScaffoldMessenger.of(context).showSnackBar(
+                                    actions: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          collectionReference
+                                              .doc(snapshot.data!.docs[index].get('Username'))
+                                              .delete()
+                                              .whenComplete(
+                                                () => {
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(
+                                                      content: const Text(
+                                                        'User Deleted',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      backgroundColor: Colors.blueAccent.shade700,
+                                                    ),
+                                                  ),
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) => const ViewUserScreen(),
+                                                    ),
+                                                  )
+                                                },
+                                              )
+                                              .catchError(
+                                                (error) =>
+                                                    ScaffoldMessenger.of(context).showSnackBar(
                                                   SnackBar(
                                                     content: const Text(
-                                                      'User Deleted',
+                                                      'Try Again',
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontWeight: FontWeight.bold,
@@ -121,78 +186,60 @@ class ViewUserScreen extends StatelessWidget {
                                                     backgroundColor: Colors.blueAccent.shade700,
                                                   ),
                                                 ),
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) => const ViewUserScreen(),
-                                                  ),
-                                                )
-                                              },
-                                            )
-                                            .catchError(
-                                              (error) => ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(
-                                                  content: const Text(
-                                                    'Try Again',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  backgroundColor: Colors.blueAccent.shade700,
-                                                ),
-                                              ),
-                                            );
-                                      },
-                                      child: const Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                                        child: Text('Yes'),
-                                      ),
-                                      style: ButtonStyle(
-                                        backgroundColor: MaterialStateProperty.all<Color>(
-                                            Colors.blueAccent.shade700),
-                                        shape: MaterialStateProperty.all<OutlinedBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(25),
+                                              );
+                                        },
+                                        child: const Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                                          child: Text('Yes'),
+                                        ),
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all<Color>(
+                                              Colors.blueAccent.shade700),
+                                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(25),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                                        child: Text('No'),
-                                      ),
-                                      style: ButtonStyle(
-                                        backgroundColor: MaterialStateProperty.all<Color>(
-                                            Colors.blueAccent.shade700),
-                                        shape: MaterialStateProperty.all<OutlinedBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(25),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Padding(
+                                          padding:
+                                              EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                                          child: Text('No'),
+                                        ),
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all<Color>(
+                                              Colors.blueAccent.shade700),
+                                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(25),
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                              size: 24,
+                                    ],
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                                size: 24,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            );
+                    );
+                  },
+                ),
+              );
+            }
           }
         },
       ),
