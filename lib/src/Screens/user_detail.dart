@@ -1,11 +1,11 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:daily_collection/Daily%20Collection/widgets/credit_money_dialog_widget.dart';
-import 'package:daily_collection/Daily%20Collection/widgets/debit_money_dialog_widget.dart';
 
 import 'package:flutter/material.dart';
 
+import '../widgets/credit_money_dialog_widget.dart';
+import '../widgets/debit_money_dialog_widget.dart';
 import 'view_user_screen.dart';
 
 class UserDetail extends StatelessWidget {

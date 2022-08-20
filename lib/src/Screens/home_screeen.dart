@@ -1,6 +1,7 @@
-import 'package:daily_collection/Daily%20Collection/Screens/add_user_screen.dart';
-import 'package:daily_collection/Daily%20Collection/Screens/view_user_screen.dart';
+import 'package:daily_collection/src/Screens/view_user_screen.dart';
 import 'package:flutter/material.dart';
+
+import 'add_user_screen.dart';
 
 class HomeScreeen extends StatelessWidget {
   const HomeScreeen({Key? key}) : super(key: key);
