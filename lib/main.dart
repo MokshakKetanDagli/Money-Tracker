@@ -1,7 +1,6 @@
+import 'package:daily_collection/src/Screens/daily_collection_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-import 'src/Screens/home_screeen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Daily Collection',
-      home: HomeScreeen(),
+      home: DailyCollectionHomeScreen(),
     );
   }
 }

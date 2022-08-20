@@ -9,7 +9,7 @@ class ViewUserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CollectionReference collectionReference =
-        FirebaseFirestore.instance.collection('Daily_Collection');
+        FirebaseFirestore.instance.collection('New_Daily_Collection_350');
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blueAccent.shade700,

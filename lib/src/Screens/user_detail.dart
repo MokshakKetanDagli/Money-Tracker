@@ -16,7 +16,7 @@ class UserDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-    CollectionReference users = FirebaseFirestore.instance.collection('Daily_Collection');
+    CollectionReference users = FirebaseFirestore.instance.collection('New_Daily_Collection_350');
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
