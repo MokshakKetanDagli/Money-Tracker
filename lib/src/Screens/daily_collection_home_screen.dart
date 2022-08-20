@@ -1,3 +1,4 @@
+import 'package:daily_collection/src/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 
 import 'add_user_screen.dart';
@@ -21,46 +22,24 @@ class DailyCollectionHomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () => Navigator.push(
+            CustomElevatedButton(
+              buttonName: 'Add User',
+              voidCallback: () => Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const AddUserScreen(),
-                ),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(12.0),
-                child: Text('Add User'),
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent.shade700),
-                shape: MaterialStateProperty.all<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
                 ),
               ),
             ),
             const SizedBox(
               height: 10,
             ),
-            ElevatedButton(
-              onPressed: () => Navigator.push(
+            CustomElevatedButton(
+              buttonName: 'View Users',
+              voidCallback: () => Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const ViewUserScreen(),
-                ),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(12.0),
-                child: Text('View User'),
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent.shade700),
-                shape: MaterialStateProperty.all<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
                 ),
               ),
             ),

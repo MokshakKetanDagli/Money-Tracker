@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:daily_collection/src/widgets/custom_dailog_button.dart';
+import 'package:daily_collection/src/widgets/custom_elevated_button.dart';
 
 import 'package:flutter/material.dart';
 
@@ -70,26 +72,14 @@ class ViewUserScreen extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    ElevatedButton(
-                      onPressed: () => Navigator.push(
+                    CustomElevatedButton(
+                      voidCallback: () => Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const AddUserScreen(),
                         ),
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: Text('Add User'),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.blueAccent.shade700),
-                        shape: MaterialStateProperty.all<OutlinedBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                        ),
-                      ),
+                      buttonName: 'Add User',
                     ),
                   ],
                 ),
@@ -145,8 +135,9 @@ class ViewUserScreen extends StatelessWidget {
                                       ),
                                     ),
                                     actions: [
-                                      ElevatedButton(
-                                        onPressed: () {
+                                      CustomDailogButton(
+                                        buttonName: 'Yes',
+                                        voidCallback: () {
                                           collectionReference
                                               .doc(snapshot.data!.docs[index].get('Username'))
                                               .delete()
@@ -188,39 +179,12 @@ class ViewUserScreen extends StatelessWidget {
                                                 ),
                                               );
                                         },
-                                        child: const Padding(
-                                          padding:
-                                              EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                                          child: Text('Yes'),
-                                        ),
-                                        style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all<Color>(
-                                              Colors.blueAccent.shade700),
-                                          shape: MaterialStateProperty.all<OutlinedBorder>(
-                                            RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(25),
-                                            ),
-                                          ),
-                                        ),
                                       ),
-                                      ElevatedButton(
-                                        onPressed: () {
+                                      CustomDailogButton(
+                                        buttonName: 'No',
+                                        voidCallback: () {
                                           Navigator.pop(context);
                                         },
-                                        child: const Padding(
-                                          padding:
-                                              EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                                          child: Text('No'),
-                                        ),
-                                        style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all<Color>(
-                                              Colors.blueAccent.shade700),
-                                          shape: MaterialStateProperty.all<OutlinedBorder>(
-                                            RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(25),
-                                            ),
-                                          ),
-                                        ),
                                       ),
                                     ],
                                   ),

@@ -1,3 +1,5 @@
+import 'package:daily_collection/src/widgets/custom_elevated_button.dart';
+import 'package:daily_collection/src/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -47,86 +49,35 @@ class _AddUserScreenState extends State<AddUserScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            TextField(
-              maxLength: 30,
+            CustomTextField(
               controller: usernameController,
-              keyboardType: TextInputType.name,
-              decoration: InputDecoration(
-                fillColor: Colors.blueAccent.shade700,
-                filled: true,
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(25),
-                  ),
-                  borderSide: BorderSide.none,
-                ),
-                hintText: 'Username',
-                hintStyle: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-                counterStyle: TextStyle(
-                    color: Colors.blueAccent.shade700, fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              hintText: 'Username',
+              textInputType: TextInputType.name,
+              maxLength: 30,
             ),
             const SizedBox(
               height: 10,
             ),
-            TextField(
-              maxLength: 10,
+            CustomTextField(
               controller: phoneController,
-              keyboardType: TextInputType.phone,
-              decoration: InputDecoration(
-                fillColor: Colors.blueAccent.shade700,
-                filled: true,
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(25),
-                  ),
-                  borderSide: BorderSide.none,
-                ),
-                hintText: 'Phone Number',
-                hintStyle: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-                counterStyle: TextStyle(
-                    color: Colors.blueAccent.shade700, fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              hintText: 'Phone Number',
+              textInputType: TextInputType.phone,
+              maxLength: 10,
             ),
             const SizedBox(
               height: 10,
             ),
-            TextField(
-              maxLength: 7,
+            CustomTextField(
               controller: amountController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                fillColor: Colors.blueAccent.shade700,
-                filled: true,
-                border: const OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(25),
-                  ),
-                  borderSide: BorderSide.none,
-                ),
-                hintText: 'Inital Amount',
-                hintStyle: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-                counterStyle: TextStyle(
-                    color: Colors.blueAccent.shade700, fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              hintText: 'Inital Amount',
+              textInputType: TextInputType.number,
+              maxLength: 7,
             ),
             const SizedBox(
               height: 10,
             ),
-            ElevatedButton(
-              onPressed: () {
+            CustomElevatedButton(
+              voidCallback: () {
                 if (usernameController.text == '') {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -194,19 +145,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       );
                 }
               },
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Add User'),
-              ),
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent.shade700),
-                shape: MaterialStateProperty.all<OutlinedBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                ),
-              ),
-            ),
+              buttonName: 'Add User',
+            )
           ],
         ),
       ),
