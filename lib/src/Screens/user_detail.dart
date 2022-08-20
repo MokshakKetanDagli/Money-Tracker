@@ -142,7 +142,7 @@ class UserDetail extends StatelessWidget {
                                         );
                                         await sendSMS(
                                           message:
-                                              '(${accountTransactions.length}) : Payment Received for ${DateFormat.yMMM().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} = (${value['Amount']})',
+                                              '(${accountTransactions.where((element) => element["Type"] == "Credit").length}) : Payment Received for ${DateFormat.yMMM().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} Rs ${value['Amount']}',
                                           recipients: [userData['Phone Number']],
                                           sendDirect: true,
                                         );
@@ -230,7 +230,7 @@ class UserDetail extends StatelessWidget {
                                     'Closing Balance': accountBalance,
                                     'Account Transactions': accountTransactions,
                                   }).whenComplete(
-                                    () => {
+                                    () async {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                           content: const Text(
@@ -240,7 +240,13 @@ class UserDetail extends StatelessWidget {
                                           ),
                                           backgroundColor: Colors.blueAccent.shade700,
                                         ),
-                                      ),
+                                      );
+                                      await sendSMS(
+                                        message:
+                                            '(${accountTransactions.where((element) => element["Type"] == "Debit").length}) : Paid on ${DateFormat.yMEd().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} Rs ${value['Amount']}',
+                                        recipients: [userData['Phone Number']],
+                                        sendDirect: true,
+                                      );
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
@@ -248,7 +254,7 @@ class UserDetail extends StatelessWidget {
                                             userName: userName,
                                           ),
                                         ),
-                                      )
+                                      );
                                     },
                                   );
                                 }
