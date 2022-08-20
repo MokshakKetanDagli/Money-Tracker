@@ -3,6 +3,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_sms/flutter_sms.dart';
+import 'package:intl/intl.dart';
 
 import '../widgets/credit_money_dialog_widget.dart';
 import '../widgets/debit_money_dialog_widget.dart';
@@ -71,83 +73,93 @@ class UserDetail extends StatelessWidget {
                         Flexible(
                           flex: 1,
                           child: GestureDetector(
-                            onTap: () => showDialog(
-                              barrierDismissible: true,
-                              context: context,
-                              builder: (dialogContext) => const CreditMoneyDialogWidget(),
-                            ).then((value) {
-                              if (value == null) {
-                                return ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text(
-                                      'Transaction Failed\nTry Again',
-                                      style: TextStyle(
-                                          color: Colors.white, fontWeight: FontWeight.bold),
-                                    ),
-                                    backgroundColor: Colors.blueAccent.shade700,
-                                  ),
-                                );
-                              } else if (value['Date'] == '') {
-                                return ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text(
-                                      'Please select a date',
-                                      style: TextStyle(
-                                          color: Colors.white, fontWeight: FontWeight.bold),
-                                    ),
-                                    backgroundColor: Colors.blueAccent.shade700,
-                                  ),
-                                );
-                              } else if (value['Amount'] == '') {
-                                return ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: const Text(
-                                      'Please enter the amount',
-                                      style: TextStyle(
-                                          color: Colors.white, fontWeight: FontWeight.bold),
-                                    ),
-                                    backgroundColor: Colors.blueAccent.shade700,
-                                  ),
-                                );
-                              } else {
-                                final int accountBalance =
-                                    (userData['Closing Balance'] + int.parse(value['Amount']));
-                                final accountTransactions = List<Map<String, dynamic>>.from(
-                                    userData['Account Transactions']);
-                                accountTransactions.insert(0, {
-                                  'Date': value['Date'],
-                                  'Amount': value['Amount'],
-                                  'Type': 'Credit',
-                                });
-                                users.doc(userName).update({
-                                  'Username': userData['Username'],
-                                  'Phone Number': userData['Phone Number'],
-                                  'Closing Balance': accountBalance,
-                                  'Account Transactions': accountTransactions,
-                                }).whenComplete(
-                                  () => {
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                            onTap: () {
+                              showDialog(
+                                barrierDismissible: true,
+                                context: context,
+                                builder: (dialogContext) => const CreditMoneyDialogWidget(),
+                              ).then(
+                                (value) {
+                                  if (value == null) {
+                                    return ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: const Text(
-                                          'Transaction Saved',
+                                          'Transaction Failed\nTry Again',
                                           style: TextStyle(
                                               color: Colors.white, fontWeight: FontWeight.bold),
                                         ),
                                         backgroundColor: Colors.blueAccent.shade700,
                                       ),
-                                    ),
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => UserDetail(
-                                          userName: userName,
+                                    );
+                                  } else if (value['Date'] == '') {
+                                    return ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: const Text(
+                                          'Please select a date',
+                                          style: TextStyle(
+                                              color: Colors.white, fontWeight: FontWeight.bold),
                                         ),
+                                        backgroundColor: Colors.blueAccent.shade700,
                                       ),
-                                    ),
-                                  },
-                                );
-                              }
-                            }),
+                                    );
+                                  } else if (value['Amount'] == '') {
+                                    return ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: const Text(
+                                          'Please enter the amount',
+                                          style: TextStyle(
+                                              color: Colors.white, fontWeight: FontWeight.bold),
+                                        ),
+                                        backgroundColor: Colors.blueAccent.shade700,
+                                      ),
+                                    );
+                                  } else {
+                                    final int accountBalance =
+                                        (userData['Closing Balance'] + int.parse(value['Amount']));
+                                    final accountTransactions = List<Map<String, dynamic>>.from(
+                                        userData['Account Transactions']);
+                                    accountTransactions.insert(0, {
+                                      'Date': value['Date'],
+                                      'Amount': value['Amount'],
+                                      'Type': 'Credit',
+                                    });
+                                    users.doc(userName).update({
+                                      'Username': userData['Username'],
+                                      'Phone Number': userData['Phone Number'],
+                                      'Closing Balance': accountBalance,
+                                      'Account Transactions': accountTransactions,
+                                    }).whenComplete(
+                                      () async {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: const Text(
+                                              'Transaction Saved',
+                                              style: TextStyle(
+                                                  color: Colors.white, fontWeight: FontWeight.bold),
+                                            ),
+                                            backgroundColor: Colors.blueAccent.shade700,
+                                          ),
+                                        );
+                                        await sendSMS(
+                                          message:
+                                              '(${accountTransactions.length}) : Payment Received for ${DateFormat.yMMM().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} = (${value['Amount']})',
+                                          recipients: [userData['Phone Number']],
+                                          sendDirect: true,
+                                        );
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => UserDetail(
+                                              userName: userName,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                              );
+                            },
                             child: Chip(
                               backgroundColor: Colors.blueAccent.shade700,
                               label: const Text(
