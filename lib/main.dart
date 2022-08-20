@@ -1,6 +1,7 @@
-import 'package:daily_collection/Daily%20Collection/Screens/home_screeen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+import 'home_screeen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
