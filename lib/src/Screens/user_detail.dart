@@ -168,7 +168,7 @@ class UserDetail extends StatelessWidget {
                                 return ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: const Text(
-                                      'Transaction Failed\nTry Again',
+                                      'Transaction Failed\nTry Again Later',
                                       style: TextStyle(
                                           color: Colors.white, fontWeight: FontWeight.bold),
                                     ),
