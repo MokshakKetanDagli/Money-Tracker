@@ -144,7 +144,7 @@ class UserDetail extends StatelessWidget {
                                           message:
                                               '(${accountTransactions.where((element) => element["Type"] == "Credit").length}) : Payment Received for ${DateFormat.yMMM().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} Rs ${value['Amount']}',
                                           recipients: [userData['Phone Number']],
-                                          // sendDirect: true,
+                                          sendDirect: true,
                                         );
                                         Navigator.pushReplacement(
                                           context,
@@ -245,7 +245,7 @@ class UserDetail extends StatelessWidget {
                                         message:
                                             '(${accountTransactions.where((element) => element["Type"] == "Debit").length}) : Paid on ${DateFormat.yMEd().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} Rs ${value['Amount']}',
                                         recipients: [userData['Phone Number']],
-                                        // sendDirect: true,
+                                        sendDirect: true,
                                       );
                                       Navigator.pushReplacement(
                                         context,
