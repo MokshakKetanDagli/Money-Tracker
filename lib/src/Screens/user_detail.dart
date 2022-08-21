@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_sms/flutter_sms.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/credit_money_dialog_widget.dart';
 import '../widgets/debit_money_dialog_widget.dart';
@@ -127,7 +128,7 @@ class UserDetail extends StatelessWidget {
                                       'Closing Balance': accountBalance,
                                       'Account Transactions': accountTransactions,
                                     }).whenComplete(
-                                      () {
+                                      () async {
                                         ScaffoldMessenger.of(context).showSnackBar(
                                           SnackBar(
                                             content: const Text(
@@ -138,6 +139,35 @@ class UserDetail extends StatelessWidget {
                                             backgroundColor: Colors.blueAccent.shade700,
                                           ),
                                         );
+                                        Uri creditSmsUri = Uri(
+                                          scheme: 'sms',
+                                          path: '+91' + userData['Phone Number'],
+                                          queryParameters: <String, String>{
+                                            'body': Uri.encodeComponent(
+                                                '(${accountTransactions.where((element) => element["Type"] == "Credit").length}) : Payment Received for ${DateFormat.yMMM().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} Rs ${value['Amount']}')
+                                          },
+                                        );
+                                        await launchUrl(creditSmsUri).whenComplete(() {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: const Text(
+                                                'Transaction Saved',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                              backgroundColor: Colors.blueAccent.shade700,
+                                            ),
+                                          );
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => UserDetail(
+                                                userName: userName,
+                                              ),
+                                            ),
+                                          );
+                                        });
                                         // await sendSMS(
                                         //   message:
                                         //       '(${accountTransactions.where((element) => element["Type"] == "Credit").length}) : Payment Received for ${DateFormat.yMMM().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} Rs ${value['Amount']}',
@@ -228,31 +258,41 @@ class UserDetail extends StatelessWidget {
                                     'Closing Balance': accountBalance,
                                     'Account Transactions': accountTransactions,
                                   }).whenComplete(
-                                    () {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: const Text(
-                                            'Transaction Saved',
-                                            style: TextStyle(
-                                                color: Colors.white, fontWeight: FontWeight.bold),
-                                          ),
-                                          backgroundColor: Colors.blueAccent.shade700,
-                                        ),
+                                    () async {
+                                      Uri debitSmsUri = Uri(
+                                        scheme: 'sms',
+                                        path: '+91' + userData['Phone Number'],
+                                        queryParameters: <String, String>{
+                                          'body': Uri.encodeComponent(
+                                              '(${accountTransactions.where((element) => element["Type"] == "Debit").length}) : Paid on ${DateFormat.yMEd().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} Rs ${value['Amount']}')
+                                        },
                                       );
+                                      await launchUrl(debitSmsUri).whenComplete(() {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: const Text(
+                                              'Transaction Saved',
+                                              style: TextStyle(
+                                                  color: Colors.white, fontWeight: FontWeight.bold),
+                                            ),
+                                            backgroundColor: Colors.blueAccent.shade700,
+                                          ),
+                                        );
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => UserDetail(
+                                              userName: userName,
+                                            ),
+                                          ),
+                                        );
+                                      });
                                       // await sendSMS(
                                       //   message:
                                       //       '(${accountTransactions.where((element) => element["Type"] == "Debit").length}) : Paid on ${DateFormat.yMEd().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} Rs ${value['Amount']}',
                                       //   recipients: [userData['Phone Number']],
                                       //   sendDirect: true,
                                       // );
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => UserDetail(
-                                            userName: userName,
-                                          ),
-                                        ),
-                                      );
                                     },
                                   );
                                 }
