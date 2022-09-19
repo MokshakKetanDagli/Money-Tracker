@@ -143,8 +143,8 @@ class UserDetail extends StatelessWidget {
                                           scheme: 'sms',
                                           path: '+91' + userData['Phone Number'],
                                           queryParameters: <String, String>{
-                                            'body': Uri.encodeComponent(
-                                                '(${accountTransactions.where((element) => element["Type"] == "Credit").length}) : Payment Received for ${DateFormat.yMMM().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} Rs ${value['Amount']}')
+                                            'body':
+                                                ('(${accountTransactions.where((element) => element["Type"] == "Credit").length}) : Payment Received for ${DateFormat.yMMM().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} Rs ${value['Amount']}')
                                           },
                                         );
                                         await launchUrl(creditSmsUri).whenComplete(() {
@@ -263,8 +263,8 @@ class UserDetail extends StatelessWidget {
                                         scheme: 'sms',
                                         path: '+91' + userData['Phone Number'],
                                         queryParameters: <String, String>{
-                                          'body': Uri.encodeComponent(
-                                              '(${accountTransactions.where((element) => element["Type"] == "Debit").length}) : Paid on ${DateFormat.yMEd().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} Rs ${value['Amount']}')
+                                          'body':
+                                              ('(${accountTransactions.where((element) => element["Type"] == "Debit").length}) : Paid on ${DateFormat.yMEd().format(DateFormat("EEE, dd/MMM/y").parse(value['Date'])).toString()} Rs ${value['Amount']}'),
                                         },
                                       );
                                       await launchUrl(debitSmsUri).whenComplete(() {
