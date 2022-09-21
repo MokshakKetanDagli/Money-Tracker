@@ -1,7 +1,9 @@
-import 'package:daily_collection/src/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/custom_elevated_button.dart';
 import 'add_user_screen.dart';
+import 'pending_payments_screen.dart';
+import 'recieved_payments_screen.dart';
 import 'view_user_screen.dart';
 
 class DailyCollectionHomeScreen extends StatelessWidget {
@@ -40,6 +42,30 @@ class DailyCollectionHomeScreen extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const ViewUserScreen(),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            CustomElevatedButton(
+              buttonName: 'Received Payments',
+              voidCallback: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ReceivedPaymentsScreen(),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            CustomElevatedButton(
+              buttonName: 'Pending Payments',
+              voidCallback: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PendingPaymentsScreen(),
                 ),
               ),
             ),
